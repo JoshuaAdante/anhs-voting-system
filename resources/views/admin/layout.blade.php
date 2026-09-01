@@ -1,289 +1,167 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pageTitle ?? 'Admin' }} – SSLG Election System</title>
+
+    <!-- Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN (preflight disabled – keeps existing page CSS intact) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false },
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+
     <style>
+        /* ─── Reset & base ─── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --brand: #1e3a8a;
-            --brand-hover: #1e40af;
-            --brand-light: #eff6ff;
-            --sidebar-w: 240px;
-        }
-
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             background: #f1f5f9;
             min-height: 100vh;
-            display: flex;
+            color: #1e293b;
         }
 
-        /* ══════════ SIDEBAR ══════════ */
-        .sidebar {
-            width: var(--sidebar-w);
-            min-height: 100vh;
-            background: var(--brand);
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            display: flex;
-            flex-direction: column;
-            z-index: 200;
-            box-shadow: 3px 0 14px rgba(0,0,0,0.15);
+        /* Material icon sizing helper */
+        .ms { font-family: 'Material Symbols Outlined'; font-weight: normal;
+              font-style: normal; font-size: 20px; line-height: 1; display: inline-block;
+              white-space: nowrap; word-wrap: normal; direction: ltr;
+              -webkit-font-smoothing: antialiased; user-select: none;
+              font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+        /* ─── CSS tokens (used by page templates) ─── */
+        :root {
+            --brand:        #1e3a8a;
+            --brand-hover:  #1e40af;
+            --brand-light:  #eff6ff;
+            --green-active: #f0fdf4;
+            --green-text:   #15803d;
+            --green-border: #bbf7d0;
+            --sidebar-w:    264px;
+            --topbar-h:     64px;
+            --radius-card:  1.5rem;
+            --radius-sm:    0.75rem;
         }
 
-        /* Brand */
-        .sb-brand {
-            padding: 20px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .sb-logos {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .sb-logo-img {
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            object-fit: contain;
-        }
-
-        .sb-logo-ph {
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            border: 1.5px dashed rgba(255,255,255,0.4);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 7px; color: rgba(255,255,255,0.65);
-        }
-
-        .sb-brand-name {
-            font-size: 11px; font-weight: 800;
-            color: #fff; line-height: 1.4;
-            letter-spacing: 0.01em;
-        }
-
-        .sb-brand-sub {
-            font-size: 10px; color: rgba(255,255,255,0.55);
-            margin-top: 1px;
-        }
-
-        /* Nav */
-        .sb-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
-
-        .sb-section {
-            font-size: 9px; font-weight: 700;
-            letter-spacing: 0.12em; text-transform: uppercase;
-            color: rgba(255,255,255,0.38);
-            padding: 12px 16px 4px;
-        }
-
-        .sb-link {
-            display: flex; align-items: center; gap: 11px;
-            padding: 10px 16px;
-            color: rgba(255,255,255,0.75);
-            text-decoration: none;
-            font-size: 13px; font-weight: 500;
-            border-left: 3px solid transparent;
-            transition: all 0.15s;
-        }
-
-        .sb-link:hover {
-            background: rgba(255,255,255,0.09);
-            color: #fff;
-            border-left-color: rgba(255,255,255,0.4);
-        }
-
-        .sb-link.active {
-            background: rgba(255,255,255,0.14);
-            color: #fff;
-            border-left-color: #60a5fa;
-            font-weight: 700;
-        }
-
-        .sb-link svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-        /* Bottom actions */
-        .sb-bottom {
-            border-top: 1px solid rgba(255,255,255,0.10);
-            padding: 14px 16px;
-        }
-
-        .sb-logout {
-            display: flex; align-items: center; gap: 9px;
-            color: rgba(255,255,255,0.60);
-            text-decoration: none; font-size: 13px;
-            padding: 8px 0;
-            transition: color 0.15s;
-        }
-
-        .sb-logout:hover { color: #f87171; }
-        .sb-logout svg { width: 15px; height: 15px; }
-
-        /* ══════════ MAIN ══════════ */
-        .main {
-            margin-left: var(--sidebar-w);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Topbar */
-        .topbar {
-            background: #fff;
-            padding: 14px 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-        }
-
-        .topbar-left h1 {
-            font-size: 16px; font-weight: 800; color: #0f172a;
-        }
-
-        .topbar-left p {
-            font-size: 12px; color: #64748b; margin-top: 1px;
-        }
-
-        .topbar-right {
-            display: flex; align-items: center; gap: 10px;
-        }
-
-        .admin-chip {
-            padding: 4px 12px;
-            background: var(--brand-light);
-            color: var(--brand);
-            font-size: 12px; font-weight: 700;
-            border-radius: 20px;
-        }
-
-        /* Content */
-        .content { padding: 24px 28px; flex: 1; }
-
-        .page-header { margin-bottom: 22px; }
-        .page-header h2 { font-size: 20px; font-weight: 800; color: #0f172a; }
-        .page-header p  { font-size: 13px; color: #64748b; margin-top: 3px; }
-
-        /* ══════════ CARDS ══════════ */
+        /* ══════════════════════════════════
+           CARDS
+        ══════════════════════════════════ */
         .card {
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            border-radius: var(--radius-card);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.05);
             overflow: hidden;
+            border: 1px solid #eef2f7;
         }
+        .card-shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 8px 28px rgba(0,0,0,0.06); }
 
         .card-header {
-            padding: 14px 20px;
+            padding: 16px 22px;
             border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
+            background: #fafbfc;
         }
-
         .card-header h3 {
             font-size: 14px; font-weight: 700; color: #0f172a;
             display: flex; align-items: center; gap: 8px;
         }
+        .card-body { padding: 22px; }
 
-        .card-body { padding: 20px; }
+        /* ══════════════════════════════════
+           PAGE HEADER
+        ══════════════════════════════════ */
+        .page-header { margin-bottom: 24px; }
+        .page-header h2 { font-size: 22px; font-weight: 800; color: #0f172a; letter-spacing: -0.025em; }
+        .page-header p  { font-size: 13px; color: #64748b; margin-top: 4px; font-weight: 500; }
 
-        /* ══════════ STATS ══════════ */
+        /* ══════════════════════════════════
+           STATS GRID
+        ══════════════════════════════════ */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px,1fr));
-            gap: 14px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px; margin-bottom: 32px;
         }
-
         .stat-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 18px 20px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-            display: flex; align-items: center; gap: 14px;
+            background: #fff; border-radius: var(--radius-card);
+            padding: 28px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f7;
+            display: flex; align-items: center; gap: 16px;
         }
-
         .stat-icon {
-            width: 44px; height: 44px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
+            width: 56px; height: 56px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-
-        .stat-icon svg { width: 22px; height: 22px; }
-
+        .stat-icon svg { width: 26px; height: 26px; }
         .ic-blue   { background: #eff6ff; color: #3b82f6; }
         .ic-green  { background: #f0fdf4; color: #22c55e; }
         .ic-purple { background: #f5f3ff; color: #8b5cf6; }
         .ic-orange { background: #fff7ed; color: #f97316; }
         .ic-teal   { background: #f0fdfa; color: #14b8a6; }
-
+        .ic-red    { background: #fff1f2; color: #ef4444; }
         .stat-label {
-            font-size: 11px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.06em;
-            color: #64748b;
+            font-size: 12px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.07em; color: #94a3b8;
         }
-
         .stat-value {
-            font-size: 26px; font-weight: 800; color: #0f172a;
-            line-height: 1.1; margin-top: 2px;
+            font-size: 32px; font-weight: 800; color: #0f172a;
+            line-height: 1.1; margin-top: 5px; letter-spacing: -0.03em;
         }
 
-        /* ══════════ PROGRESS BAR ══════════ */
+        /* ══════════════════════════════════
+           PROGRESS BAR
+        ══════════════════════════════════ */
         .progress-wrap { margin-bottom: 18px; }
-
-        .progress-bar-bg {
-            height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;
-        }
-
+        .progress-bar-bg { height: 8px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
         .progress-bar-fill {
-            height: 100%; border-radius: 4px;
-            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
-            transition: width 0.6s ease;
+            height: 100%; border-radius: 99px;
+            background: linear-gradient(90deg, var(--brand), #3b82f6);
+            transition: width 0.7s ease;
         }
-
         .progress-label {
             display: flex; justify-content: space-between;
-            font-size: 12px; color: #64748b; margin-top: 5px;
+            font-size: 12px; color: #64748b; margin-top: 6px; font-weight: 500;
         }
 
-        /* ══════════ TABLE ══════════ */
+        /* ══════════════════════════════════
+           TABLE
+        ══════════════════════════════════ */
         .table-wrap { overflow-x: auto; }
-
         table { width: 100%; border-collapse: collapse; }
-
         thead th {
-            padding: 10px 16px;
-            text-align: left;
+            padding: 11px 18px; text-align: left;
             font-size: 11px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.06em;
-            color: #94a3b8; background: #f8fafc;
+            text-transform: uppercase; letter-spacing: 0.07em;
+            color: #94a3b8; background: #fafbfc;
             border-bottom: 1px solid #f1f5f9;
         }
-
-        tbody td {
-            padding: 12px 16px;
-            font-size: 13px; color: #334155;
-            border-bottom: 1px solid #f8fafc;
-        }
-
+        tbody td { padding: 13px 18px; font-size: 13px; color: #334155; border-bottom: 1px solid #f8fafc; }
         tbody tr:last-child td { border-bottom: none; }
-        tbody tr:hover { background: #f8fafc; }
+        tbody tr:hover { background: #fafbfd; }
 
-        /* ══════════ BADGES ══════════ */
+        /* ══════════════════════════════════
+           BADGES
+        ══════════════════════════════════ */
         .badge {
             display: inline-flex; align-items: center;
-            padding: 2px 10px;
-            border-radius: 20px; font-size: 11px; font-weight: 700;
+            padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
         }
-
         .badge-blue   { background: #eff6ff; color: #1d4ed8; }
         .badge-green  { background: #dcfce7; color: #15803d; }
         .badge-amber  { background: #fef3c7; color: #92400e; }
@@ -291,260 +169,305 @@
         .badge-gray   { background: #f1f5f9; color: #475569; }
         .badge-purple { background: #f5f3ff; color: #6d28d9; }
 
-        /* ══════════ BUTTONS ══════════ */
+        /* ══════════════════════════════════
+           BUTTONS
+        ══════════════════════════════════ */
         .btn {
             display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 16px; border-radius: 8px; border: none;
+            padding: 8px 16px; border-radius: 10px; border: none;
             font-size: 13px; font-weight: 600; cursor: pointer;
-            text-decoration: none; transition: opacity 0.15s;
+            text-decoration: none;
+            transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+            font-family: inherit; letter-spacing: -0.01em;
         }
-
-        .btn:hover { opacity: 0.85; }
+        .btn:hover { opacity: 0.88; }
+        .btn:active { transform: scale(0.97); }
         .btn svg { width: 15px; height: 15px; }
-
-        .btn-primary   { background: var(--brand); color: #fff; }
+        .btn-primary   { background: var(--brand); color: #fff; box-shadow: 0 2px 8px rgba(30,58,138,0.25); }
         .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
         .btn-danger    { background: #ef4444; color: #fff; }
         .btn-success   { background: #22c55e; color: #fff; }
         .btn-warning   { background: #f97316; color: #fff; }
         .btn-outline   { background: transparent; color: var(--brand); border: 1.5px solid var(--brand); }
         .btn-ghost     { background: transparent; color: #64748b; border: 1px solid #e2e8f0; }
-        .btn-icon      { padding: 6px; border-radius: 6px; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+        .btn-icon      { padding: 6px; border-radius: 8px; background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
         .btn-sm        { padding: 5px 12px; font-size: 12px; }
 
-        /* ══════════ FORMS ══════════ */
+        /* ══════════════════════════════════
+           FORMS
+        ══════════════════════════════════ */
         .form-group { margin-bottom: 16px; }
-
-        .form-group label {
-            display: block; font-size: 13px; font-weight: 600;
-            color: #374151; margin-bottom: 6px;
-        }
-
+        .form-group label { display: block; font-size: 12.5px; font-weight: 600; color: #374151; margin-bottom: 6px; }
         .form-control {
-            width: 100%; padding: 9px 12px;
-            border: 1.5px solid #e2e8f0; border-radius: 8px;
+            width: 100%; padding: 9px 13px;
+            border: 1.5px solid #e2e8f0; border-radius: 10px;
             font-size: 13px; color: #0f172a; background: #f8fafc;
-            outline: none; transition: border-color 0.2s;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
             font-family: inherit;
         }
-
-        .form-control:focus { border-color: var(--brand); background: #fff; }
-
+        .form-control:focus { border-color: var(--brand); background: #fff; box-shadow: 0 0 0 3px rgba(30,58,138,0.08); }
         select.form-control { appearance: none; cursor: pointer; }
 
-        /* ══════════ MODAL ══════════ */
+        /* ══════════════════════════════════
+           MODAL
+        ══════════════════════════════════ */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
-            background: rgba(15,23,42,0.5); z-index: 500;
+            background: rgba(15,23,42,0.45); z-index: 500;
             align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
         }
-
         .modal-overlay.open { display: flex; }
-
         .modal {
-            background: #fff; border-radius: 14px;
+            background: #fff; border-radius: var(--radius-card);
             width: 100%; max-width: 480px; max-height: 90vh;
             overflow-y: auto; padding: 28px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.22); border: 1px solid #eef2f7;
         }
-
-        .modal-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h3 { font-size: 16px; font-weight: 700; color: #0f172a; }
-
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+        .modal-header h3 { font-size: 16px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
         .modal-close {
-            background: transparent; border: none; cursor: pointer;
-            color: #94a3b8; font-size: 20px; line-height: 1;
+            background: #f1f5f9; border: none; cursor: pointer; color: #64748b;
             display: flex; align-items: center; justify-content: center;
-            width: 28px; height: 28px; border-radius: 6px;
+            width: 30px; height: 30px; border-radius: 8px; font-size: 18px; line-height: 1;
+            transition: background 0.12s, color 0.12s;
         }
-
-        .modal-close:hover { background: #f1f5f9; color: #475569; }
-
+        .modal-close:hover { background: #e2e8f0; color: #0f172a; }
         .modal-footer { margin-top: 22px; display: flex; gap: 8px; justify-content: flex-end; }
 
-        /* ══════════ GRID HELPERS ══════════ */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* ══════════════════════════════════
+           GRID HELPERS
+        ══════════════════════════════════ */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .col-span-2 { grid-column: span 2; }
 
-        /* ══════════ LIVE DOT ══════════ */
+        /* ══════════════════════════════════
+           LIVE DOT
+        ══════════════════════════════════ */
         .live-dot {
             width: 8px; height: 8px; border-radius: 50%;
             background: #22c55e; display: inline-block;
-            animation: pulse 1.4s infinite;
+            animation: livePulse 1.4s infinite;
         }
+        @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.25; }
-        }
-
-        /* ══════════ TABS ══════════ */
-        .tabs { display: flex; gap: 4px; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; }
-
+        /* ══════════════════════════════════
+           TABS
+        ══════════════════════════════════ */
+        .tabs { display: flex; gap: 2px; border-bottom: 2px solid #e8edf3; margin-bottom: 22px; }
         .tab-btn {
-            padding: 9px 18px; background: transparent; border: none;
+            padding: 10px 20px; background: transparent; border: none;
             font-size: 13px; font-weight: 600; color: #64748b;
             cursor: pointer; border-bottom: 2px solid transparent;
-            margin-bottom: -2px; transition: all 0.15s;
+            margin-bottom: -2px; transition: all 0.15s; font-family: inherit;
         }
-
         .tab-btn.active { color: var(--brand); border-bottom-color: var(--brand); }
         .tab-btn:hover  { color: var(--brand); }
-
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
 
-        /* ══════════ SEARCH INPUT ══════════ */
+        /* ══════════════════════════════════
+           SEARCH INPUT
+        ══════════════════════════════════ */
         .search-wrap { position: relative; }
+        .search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: #94a3b8; }
+        .search-wrap input { padding-left: 34px; }
 
-        .search-wrap svg {
-            position: absolute; left: 10px; top: 50%;
-            transform: translateY(-50%);
-            width: 15px; height: 15px; color: #94a3b8;
-        }
-
-        .search-wrap input { padding-left: 32px; }
-
-        /* ══════════ CANDIDATE CARDS ══════════ */
+        /* ══════════════════════════════════
+           CANDIDATE CARDS
+        ══════════════════════════════════ */
         .candidate-card {
             display: flex; align-items: center; gap: 12px;
-            border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px;
+            border: 1px solid #eef2f7; border-radius: 14px; padding: 13px;
+            transition: box-shadow 0.15s, transform 0.15s;
         }
-
+        .candidate-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
         .candidate-avatar {
-            width: 48px; height: 48px; border-radius: 50%;
-            background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+            width: 46px; height: 46px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand), #3b82f6);
             color: #fff; font-size: 18px; font-weight: 800;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0; overflow: hidden;
         }
-
         .candidate-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
         .candidate-info { flex: 1; min-width: 0; }
-        .candidate-name { font-size: 13px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .candidate-meta { font-size: 11px; color: #64748b; margin-top: 1px; }
-
+        .candidate-name { font-size: 13px; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .candidate-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
         .candidate-actions { display: flex; gap: 4px; }
 
-        /* ══════════ ALERT ══════════ */
-        .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 18px; }
+        /* ══════════════════════════════════
+           ALERT
+        ══════════════════════════════════ */
+        .alert { padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 18px; font-weight: 500; }
         .alert-error   { background: #fff1f2; border: 1px solid #fecdd3; color: #be123c; }
         .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
 
-        /* ══════════ TOKEN TABLE ══════════ */
+        /* ══════════════════════════════════
+           MONO / TOKEN
+        ══════════════════════════════════ */
         .mono { font-family: 'Courier New', monospace; letter-spacing: 0.12em; font-weight: 700; }
 
-        /* ══════════ RESPONSIVE ══════════ */
+        /* ══════════════════════════════════
+           PAGINATION
+        ══════════════════════════════════ */
+        nav[role="navigation"] svg { width: 20px; height: 20px; flex-shrink: 0; display: inline-block; }
+        .pagination-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 10px; padding: 14px 22px; border-top: 1px solid #f1f5f9;
+        }
+        .pagination-info { font-size: 12.5px; color: #64748b; font-weight: 500; }
+        .pagination { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+        .pg-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 32px; height: 32px; padding: 0 8px;
+            border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #fff; color: #374151;
+            font-size: 13px; font-weight: 500; font-family: inherit;
+            cursor: pointer; text-decoration: none; line-height: 1;
+            transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.08s;
+            user-select: none;
+        }
+        .pg-btn svg { width: 16px; height: 16px; flex-shrink: 0; display: block; }
+        .pg-btn:hover:not(:disabled):not(.pg-active):not(.pg-ellipsis) { background: #f1f5f9; border-color: #cbd5e1; }
+        .pg-btn:active:not(:disabled):not(.pg-active):not(.pg-ellipsis) { background: #e2e8f0; transform: scale(0.95); }
+        .pg-btn.pg-active { background: var(--brand); border-color: var(--brand); color: #fff; cursor: default; }
+        .pg-btn:disabled, .pg-btn.pg-ellipsis { color: #9ca3af; cursor: default; background: #f9fafb; }
+
+        /* ══════════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════════ */
+        @media (max-width: 1280px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); transition: transform 0.25s; }
             .sidebar.open { transform: translateX(0); }
-            .main { margin-left: 0; }
-            .content { padding: 16px; }
-            .topbar { padding: 12px 16px; }
             .grid-2 { grid-template-columns: 1fr; }
+            .dash-charts-row { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 540px) {
+            .pagination-bar { flex-direction: column; align-items: flex-start; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-card { padding: 20px 16px; }
+            .stat-value { font-size: 26px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ══════════ SIDEBAR ══════════ -->
-<aside class="sidebar" id="sidebar">
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside id="sidebar"
+    class="fixed left-0 top-0 h-full bg-white z-50 flex flex-col border-r border-slate-200"
+    style="width:264px; box-shadow: 2px 0 20px rgba(0,0,0,0.06);">
 
-    <div class="sb-brand">
-        <div class="sb-logos">
-            {{-- <img src="{{ asset('images/logo1.png') }}" alt="L1" class="sb-logo-img"> --}}
-            {{-- <img src="{{ asset('images/deped.png') }}" alt="L2" class="sb-logo-img"> --}}
-            <div class="sb-logo-ph">L1</div>
-            <div class="sb-logo-ph">L2</div>
+    {{-- Brand --}}
+    <div class="px-5 pt-5 pb-4 border-b border-slate-100">
+        <div class="flex items-center gap-2 mb-2.5">
+            <img src="{{ asset('images/anhs-logo.png') }}" class="w-9 h-9 rounded-full object-contain" alt="ANHS Logo">
+            <img src="{{ asset('images/deped-logo.png') }}" class="w-9 h-9 rounded-full object-contain" alt="DepEd Logo">
         </div>
-        <div class="sb-brand-name">SSLG Election System</div>
-        <div class="sb-brand-sub">Agusan National High School</div>
+        <div style="font-size:11.5px;font-weight:800;color:#0f172a;letter-spacing:-0.01em;line-height:1.4;">SSLG Election System</div>
+        <div style="font-size:10px;color:#94a3b8;font-weight:500;margin-top:1px;">Agusan National High School</div>
     </div>
 
-    <nav class="sb-nav">
-        <div class="sb-section">Main</div>
+    {{-- Nav --}}
+    <nav class="flex-1 px-3 py-3 overflow-y-auto" style="display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:9.5px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:#b0bac5;padding:8px 8px 4px;">Main</div>
 
         <a href="{{ route('admin.dashboard') }}"
-           class="sb-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline
+                  {{ request()->routeIs('admin.dashboard') ? 'bg-green-50 border border-green-200' : 'hover:bg-slate-100' }}"
+           style="{{ request()->routeIs('admin.dashboard') ? 'color:#15803d;font-weight:700;' : 'color:#4b5563;font-weight:500;' }}font-size:13.5px;">
+            <span class="ms" style="{{ request()->routeIs('admin.dashboard') ? 'color:#15803d;' : 'color:#9ca3af;' }}">dashboard</span>
             Dashboard
         </a>
 
         <a href="{{ route('admin.students') }}"
-           class="sb-link {{ request()->routeIs('admin.students') ? 'active' : '' }}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline
+                  {{ request()->routeIs('admin.students') ? 'bg-green-50 border border-green-200' : 'hover:bg-slate-100' }}"
+           style="{{ request()->routeIs('admin.students') ? 'color:#15803d;font-weight:700;' : 'color:#4b5563;font-weight:500;' }}font-size:13.5px;">
+            <span class="ms" style="{{ request()->routeIs('admin.students') ? 'color:#15803d;' : 'color:#9ca3af;' }}">group</span>
             Students
         </a>
 
         <a href="{{ route('admin.candidates') }}"
-           class="sb-link {{ request()->routeIs('admin.candidates') ? 'active' : '' }}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-            </svg>
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline
+                  {{ request()->routeIs('admin.candidates') ? 'bg-green-50 border border-green-200' : 'hover:bg-slate-100' }}"
+           style="{{ request()->routeIs('admin.candidates') ? 'color:#15803d;font-weight:700;' : 'color:#4b5563;font-weight:500;' }}font-size:13.5px;">
+            <span class="ms" style="{{ request()->routeIs('admin.candidates') ? 'color:#15803d;' : 'color:#9ca3af;' }}">person_search</span>
             Candidates
         </a>
 
         <a href="{{ route('admin.system') }}"
-           class="sb-link {{ request()->routeIs('admin.system') ? 'active' : '' }}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-            </svg>
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline
+                  {{ request()->routeIs('admin.system') ? 'bg-green-50 border border-green-200' : 'hover:bg-slate-100' }}"
+           style="{{ request()->routeIs('admin.system') ? 'color:#15803d;font-weight:700;' : 'color:#4b5563;font-weight:500;' }}font-size:13.5px;">
+            <span class="ms" style="{{ request()->routeIs('admin.system') ? 'color:#15803d;' : 'color:#9ca3af;' }}">vpn_key</span>
             System / Tokens
         </a>
 
         <a href="{{ route('admin.ledger') }}"
-           class="sb-link {{ request()->routeIs('admin.ledger') ? 'active' : '' }}">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-            </svg>
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 no-underline
+                  {{ request()->routeIs('admin.ledger') ? 'bg-green-50 border border-green-200' : 'hover:bg-slate-100' }}"
+           style="{{ request()->routeIs('admin.ledger') ? 'color:#15803d;font-weight:700;' : 'color:#4b5563;font-weight:500;' }}font-size:13.5px;">
+            <span class="ms" style="{{ request()->routeIs('admin.ledger') ? 'color:#15803d;' : 'color:#9ca3af;' }}">history_edu</span>
             Ledger
         </a>
     </nav>
 
-    <div class="sb-bottom">
-        <form method="POST" action="{{ route('admin.logout') }}" onsubmit="return confirm('Logout?')">
-            @csrf
-            <button type="submit" class="sb-logout" style="background:none;border:none;cursor:pointer;width:100%;text-align:left;font-family:inherit;display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.60);font-size:13px;padding:8px 0;">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:15px;height:15px;flex-shrink:0;">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-                Logout
-            </button>
-        </form>
+    {{-- Admin card --}}
+    <div class="px-3 pb-3 pt-2 border-t border-slate-100">
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-white flex-shrink-0"
+                 style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);font-size:13px;font-weight:800;">
+                {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+            </div>
+            <div class="flex-1 min-w-0">
+                <div style="font-size:12.5px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ Auth::user()->name ?? 'Admin' }}</div>
+                <div style="font-size:10.5px;color:#94a3b8;margin-top:1px;">Administrator</div>
+            </div>
+            <form method="POST" action="{{ route('admin.logout') }}" onsubmit="return confirm('Logout?')">
+                @csrf
+                <button type="submit" title="Logout"
+                        class="flex items-center justify-center p-1.5 rounded-lg transition-colors"
+                        style="background:none;border:none;cursor:pointer;color:#94a3b8;"
+                        onmouseover="this.style.background='#fee2e2';this.style.color='#ef4444'"
+                        onmouseout="this.style.background='none';this.style.color='#94a3b8'">
+                    <span class="ms" style="font-size:18px;">logout</span>
+                </button>
+            </form>
+        </div>
     </div>
 
 </aside>
 
-<!-- ══════════ MAIN ══════════ -->
-<div class="main">
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div style="margin-left:264px;min-height:100vh;display:flex;flex-direction:column;">
 
-    <div class="topbar">
-        <div class="topbar-left">
-            <h1>Agusan National High School</h1>
-            <p>SSLG Election System · Admin Console</p>
+    {{-- Header --}}
+    <header class="z-40 flex items-center justify-between px-7"
+            style="position:fixed;top:0;left:264px;right:0;height:64px;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0;box-shadow:0 1px 10px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+            <h1 style="font-size:15px;font-weight:700;color:#0f172a;">Agusan National High School</h1>
+            <span style="padding:3px 10px;background:#eff6ff;color:#1e3a8a;font-size:10px;font-weight:700;border-radius:99px;border:1px solid #bfdbfe;letter-spacing:0.04em;text-transform:uppercase;">SSLG Admin</span>
         </div>
-        <div class="topbar-right">
-            <span class="admin-chip">
-                {{ Auth::user()->name ?? 'Admin' }}
-            </span>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-full"
+                 style="background:#f8fafc;border:1px solid #e2e8f0;">
+                <span style="font-size:12px;font-weight:700;color:#374151;">{{ Auth::user()->name ?? 'Admin' }}</span>
+                <div class="flex items-center justify-center w-7 h-7 rounded-full"
+                     style="background:linear-gradient(135deg,#1e3a8a,#3b82f6);">
+                    <span class="ms" style="font-size:15px;color:#fff;">person</span>
+                </div>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <div class="content">
+    {{-- Page content --}}
+    <main class="flex-1 p-7" style="padding-top: calc(64px + 1.75rem);">
         @if (session('error'))
             <div class="alert alert-error">{{ session('error') }}</div>
         @endif
@@ -553,12 +476,10 @@
         @endif
 
         @yield('content')
-    </div>
+    </main>
 
 </div>
 
-{{-- Page-specific scripts slot --}}
 @stack('scripts')
-
 </body>
 </html>

@@ -113,7 +113,7 @@ class AdminController extends Controller
         if ($request->status === 'voted') $query->where('has_voted', true);
         if ($request->status === 'not')   $query->where('has_voted', false);
 
-        $students = $query->orderBy('last_name')->paginate(50);
+        $students = $query->orderBy('last_name')->paginate(500);
         $sections = Student::distinct()->orderBy('section')->pluck('section');
 
         return view('admin.students', compact('students', 'sections'));

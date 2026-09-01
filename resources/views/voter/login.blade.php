@@ -231,10 +231,10 @@
 <!-- Left brand panel -->
 <div class="brand-panel">
     <div class="brand-logos">
-        {{-- <img src="{{ asset('images/logo1.png') }}" class="brand-logo-img" alt="ANHS"> --}}
-        {{-- <img src="{{ asset('images/deped.png') }}" class="brand-logo-img" alt="DepEd"> --}}
-        <div class="brand-logo-ph">L1</div>
-        <div class="brand-logo-ph">L2</div>
+        <img src="{{ asset('images/anhs-logo.png') }}" class="brand-logo-img" alt="ANHS Logo"
+             style="width:80px;height:80px;object-fit:contain;border-radius:50%;background:rgba(255,255,255,0.15);padding:5px;">
+        <img src="{{ asset('images/deped-logo.png') }}" class="brand-logo-img" alt="DepEd Logo"
+             style="width:80px;height:80px;object-fit:contain;border-radius:50%;background:rgba(255,255,255,0.15);padding:5px;">
     </div>
     <div class="brand-title" style="z-index:1;">SSLG Election<br>System</div>
     <div class="brand-sub" style="z-index:1;">Agusan National High School<br>Supreme Secondary Learner Government</div>
@@ -249,8 +249,10 @@
 
         <!-- Mobile logos -->
         <div class="mobile-logos">
-            <div class="mobile-logo-ph">L1</div>
-            <div class="mobile-logo-ph">L2</div>
+            <img src="{{ asset('images/anhs-logo.png') }}" alt="ANHS Logo"
+                 style="width:52px;height:52px;object-fit:contain;">
+            <img src="{{ asset('images/deped-logo.png') }}" alt="DepEd Logo"
+                 style="width:52px;height:52px;object-fit:contain;">
         </div>
 
         <h1 class="form-title">Voter Login</h1>

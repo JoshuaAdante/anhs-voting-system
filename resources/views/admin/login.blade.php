@@ -121,10 +121,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;display:flex;min-height:100vh}
 
 <div class="brand-panel">
     <div class="brand-logos">
-        {{-- <img src="{{ asset('images/logo1.png') }}" class="brand-logo-img" alt="Logo 1"> --}}
-        {{-- <img src="{{ asset('images/logo2.png') }}" class="brand-logo-img" alt="Logo 2"> --}}
-        <div class="brand-logo-ph">L1</div>
-        <div class="brand-logo-ph">L2</div>
+        <img src="{{ asset('images/anhs-logo.png') }}" class="brand-logo-img" alt="ANHS Logo"
+             style="width:72px;height:72px;object-fit:contain;border-radius:50%;background:rgba(255,255,255,0.15);padding:4px;">
+        <img src="{{ asset('images/deped-logo.png') }}" class="brand-logo-img" alt="DepEd Logo"
+             style="width:72px;height:72px;object-fit:contain;border-radius:50%;background:rgba(255,255,255,0.15);padding:4px;">
     </div>
 
     <div class="brand-body">
@@ -140,10 +140,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;display:flex;min-height:100vh}
     <div class="form-inner">
 
         <div class="mobile-logos">
-            {{-- <img src="{{ asset('images/logo1.png') }}" class="mobile-logo-img" alt="Logo 1"> --}}
-            {{-- <img src="{{ asset('images/logo2.png') }}" class="mobile-logo-img" alt="Logo 2"> --}}
-            <div class="mobile-logo-ph">L1</div>
-            <div class="mobile-logo-ph">L2</div>
+            <img src="{{ asset('images/anhs-logo.png') }}" class="mobile-logo-img" alt="ANHS Logo"
+                 style="width:56px;height:56px;object-fit:contain;">
+            <img src="{{ asset('images/deped-logo.png') }}" class="mobile-logo-img" alt="DepEd Logo"
+                 style="width:56px;height:56px;object-fit:contain;">
         </div>
 
         <span class="lock-badge">

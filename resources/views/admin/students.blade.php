@@ -158,11 +158,70 @@
             </tbody>
         </table>
     </div>
-    @if ($students->hasPages())
-    <div style="padding:14px 20px;border-top:1px solid #f1f5f9;">
-        {{ $students->withQueryString()->links() }}
+    <div class="pagination-bar">
+        <span class="pagination-info">
+            @if ($students->total() > 0)
+                Showing {{ $students->firstItem() }} to {{ $students->lastItem() }} of {{ $students->total() }} students
+            @else
+                No students found
+            @endif
+        </span>
+        @if ($students->lastPage() > 1)
+        <div class="pagination">
+            {{-- Previous --}}
+            @if ($students->onFirstPage())
+                <button class="pg-btn" disabled aria-label="Previous page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+            @else
+                <a class="pg-btn" href="{{ $students->withQueryString()->previousPageUrl() }}" aria-label="Previous page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </a>
+            @endif
+
+            {{-- Page numbers --}}
+            @php
+                $cp    = $students->currentPage();
+                $lp    = $students->lastPage();
+                $start = max(1, $cp - 2);
+                $end   = min($lp, $cp + 2);
+            @endphp
+
+            @if ($start > 1)
+                <a class="pg-btn" href="{{ $students->withQueryString()->url(1) }}">1</a>
+                @if ($start > 2)
+                    <button class="pg-btn pg-ellipsis" disabled>&hellip;</button>
+                @endif
+            @endif
+
+            @for ($i = $start; $i <= $end; $i++)
+                @if ($i == $cp)
+                    <button class="pg-btn pg-active" aria-current="page">{{ $i }}</button>
+                @else
+                    <a class="pg-btn" href="{{ $students->withQueryString()->url($i) }}">{{ $i }}</a>
+                @endif
+            @endfor
+
+            @if ($end < $lp)
+                @if ($end < $lp - 1)
+                    <button class="pg-btn pg-ellipsis" disabled>&hellip;</button>
+                @endif
+                <a class="pg-btn" href="{{ $students->withQueryString()->url($lp) }}">{{ $lp }}</a>
+            @endif
+
+            {{-- Next --}}
+            @if ($students->hasMorePages())
+                <a class="pg-btn" href="{{ $students->withQueryString()->nextPageUrl() }}" aria-label="Next page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </a>
+            @else
+                <button class="pg-btn" disabled aria-label="Next page">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            @endif
+        </div>
+        @endif
     </div>
-    @endif
 </div>
 
 {{-- ══ Add Student Modal ══ --}}
