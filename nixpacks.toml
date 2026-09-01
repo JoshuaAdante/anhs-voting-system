@@ -16,4 +16,4 @@ cmds = [
 ]
 
 [start]
-cmd = "until php artisan migrate --force 2>&1; do echo 'DB not ready, retrying in 5s...'; sleep 5; done && php artisan db:seed --force && php -S 0.0.0.0:$PORT -t public"
+cmd = "php artisan migrate --force; php artisan db:seed --force; php -S 0.0.0.0:${PORT:-8080} -t public"
